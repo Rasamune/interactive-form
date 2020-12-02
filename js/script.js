@@ -12,7 +12,11 @@ function onPageLoad() {
     const registerActivities = document.querySelector('#activities');
     const activities = registerActivities.querySelectorAll('[type="checkbox"]');
     const payment = document.querySelector('#payment');
+    const form = document.querySelector('form');
     let totalCost = 0;
+
+    const nameInput = document.querySelector('#name');
+    const emailInput = document.querySelector('#email');
 
     // --------------------------
     // Set initial element values
@@ -50,11 +54,41 @@ function onPageLoad() {
             method.style.display = '';
             // Hide payment methods that do not match selectedPayment
             if (method.className !== selectedPayment && method.className !== 'payment-method-box') {
-                console.log(method.className);
                 method.style.display = "none";
             }
         });
     }
+
+    // -----------------------------
+    // Submit Form & Validate Fields
+    function submitForm() {
+        isValidName();
+    }
+
+    function showOrHideToolTip(show, element) {
+        if (show) {
+            element.style.display = 'inherit';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+
+    function checkInput(validator) {
+        return e => {
+            const text = e.target.value;
+            const valid = validator(text);
+            const showTip = text !== '' && !valid;
+            const tooltip = e.target.nextElementSibling;
+            showOrHideToolTip(showTip, tooltip);
+        }
+    }
+
+    // Validate Name Field
+    const isValidName = name => /[^\s\d\W_][a-z A-Z]*$/.test(name);
+    const isValidEmail = email => /[^\s\W][a-zA-Z-_\d]+@[a-zA-Z\d]+\.\w{3}$/.test(email);
+
+    nameInput.addEventListener('input', checkInput(isValidName));
+    emailInput.addEventListener('input', checkInput(isValidEmail));
 
     // ------------------
     // On Job Role Change (if 'other' selected)
@@ -124,6 +158,13 @@ function onPageLoad() {
     payment.addEventListener('change', e => {
         const selectedPayMethod = e.target.value;
         updatePaymentMethod();
+    });
+
+    // --------------
+    // On Form Submit
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        submitForm();
     });
 
     initializeForm();
