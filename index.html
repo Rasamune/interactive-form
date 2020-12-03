@@ -45,7 +45,8 @@
             <option value="designer">Designer</option>          
             <option value="student">Student</option>
             <option value="other">Other</option>  
-          </select> 
+          </select>
+          <span id="job-hint" class="job-hint hint">Please select a Job Role</span>
           
           <input type="text" name="other-job-role" id="other-job-role" class="other-job-role" placeholder="Other job role?">
         </fieldset>
@@ -65,12 +66,13 @@
             </div>
 
             <div id="shirt-designs" class="shirt-designs">
-              <label for="design">Design:</label>
+              <label for="design">Design: *</label>
               <select id="design" name="user-design">
                 <option hidden>Select Theme</option>
                 <option value="js puns">Theme - JS Puns</option>
                 <option value="heart js">Theme - I &#9829; JS</option>
               </select>
+              <span id="shirt-design-hint" class="shirt-design-hint hint">Please select a T-Shirt Design</span>
             </div>
 
             <div id="shirt-colors" class="shirt-colors">
@@ -161,7 +163,7 @@
         <div id="credit-card" class="credit-card">
           <div class="expiration-box">
             <div class="month-box">
-              <label for="exp-month">Expiration Date:</label>
+              <label for="exp-month">Expiration Date: *</label>
               <select id="exp-month" name="user-exp-month" class="error-border">
                 <option hidden>Select Date</option>
                 <option value="1">01 - January</option>
@@ -177,10 +179,11 @@
                 <option value="11">11 - November</option>	
                 <option value="12">12 - December</option>          		          
               </select>
+              <span id="exp-month-hint" class="exp-month-hint hint">Please select a month</span>
             </div>
 
             <div class="year-box">
-              <label for="exp-year">Expiration Year:</label>
+              <label for="exp-year">Expiration Year: *</label>
               <select id="exp-year" name="user-exp-year" class="error-border">
                 <option hidden>Select Year</option>
                 <option value="2021">2021</option>
@@ -189,6 +192,7 @@
                 <option value="2024">2024</option>
                 <option value="2020">2025</option>    		          
               </select> 
+              <span id="exp-year-hint" class="exp-year-hint hint">Please select a year</span>
             </div>
           </div> 
 

@@ -10,6 +10,7 @@ function onPageLoad() {
     const tshirtColor = document.querySelector("#color");
     const tshirtColorItems = tshirtColor.querySelectorAll('option');
     const registerActivities = document.querySelector('#activities');
+    const activitiesBox = registerActivities.querySelector('#activities-box');
     const activities = registerActivities.querySelectorAll('[type="checkbox"]');
     const payment = document.querySelector('#payment');
     const form = document.querySelector('form');
@@ -20,6 +21,8 @@ function onPageLoad() {
     const ccInput = document.querySelector('#cc-num');
     const ccZip = document.querySelector('#zip');
     const ccCCV = document.querySelector('#cvv');
+    const ccExpMonth = document.querySelector('#exp-month');
+    const ccExpYear = document.querySelector('#exp-year');
 
     // --------------------------
     // Set initial element values
@@ -29,6 +32,8 @@ function onPageLoad() {
         tshirtColor.selectedIndex = 0;
         jobRole.selectedIndex = 0;
         payment.selectedIndex = 1; // Credit Card is default
+        ccExpMonth.selectedIndex = 0;
+        ccExpYear.selectedIndex = 0;
 
         // Focus on the first text input
         document.querySelector('[name="user-name"]').focus();
@@ -61,43 +66,6 @@ function onPageLoad() {
             }
         });
     }
-
-    // -----------------------------
-     // Submit Form & Validate Fields
-     function submitForm() {
-        isValidName();
-     }
-
-     function showOrHideToolTip(show, element) {
-         if (show) {
-            element.style.display = 'inherit';
-         } else {
-            element.style.display = 'none';
-        }
-    }
-
-    function checkInput(validator) {
-        return e => {
-            const text = e.target.value;
-            const valid = validator(text);
-            const showTip = text !== '' && !valid;
-            const tooltip = e.target.nextElementSibling;
-            showOrHideToolTip(showTip, tooltip);
-        };
-    }
-
-    // Validate Name Field
-    const isValidName = name => /[^\s\d\W_][a-z A-Z]*$/.test(name);
-    const isValidEmail = email => /[^\s\W][a-zA-Z-_\d]+@[a-zA-Z\d]+\.\w{3}$/.test(email);
-    const isValidCC = cc => /^\d{13}\d?\d?\d?$/.test(cc);
-    const isValidZip = zip => /^\d{5}$/.test(zip);
-    const isValidCCV = ccv => /^\d{3}$/.test(ccv);
-
-    nameInput.addEventListener('input', checkInput(isValidName));
-    emailInput.addEventListener('input', checkInput(isValidEmail));
-    ccInput.addEventListener('input', checkInput(isValidCC));
-    ccZip.addEventListener('input', checkInput(isValidZip));
-    ccCCV.addEventListener('input', checkInput(isValidCCV));
 
     // ------------------
     // On Job Role Change (if 'other' selected)
@@ -134,10 +102,6 @@ function onPageLoad() {
         const activityCostDisplay = registerActivities.querySelector('#activities-cost');
         const selectedActivity = e.target;
         const cost = parseInt(selectedActivity.getAttribute('data-cost'));
-        // If checked or unchecked update totalCost with cost
-        selectedActivity.checked ? totalCost += cost : totalCost -= cost;
-        activityCostDisplay.textContent = `Total: $${totalCost}`;
-
         // Check for conflicting time spots
         activities.forEach(activity => {
             const selectedName = selectedActivity.getAttribute('name');
@@ -145,21 +109,20 @@ function onPageLoad() {
             const activityName = activity.getAttribute('name');
             const activityTime = activity.getAttribute('data-day-and-time');
             // If checked and the selectedActivity isn't the same name as activity
-            if (selectedName !== activityName && selectedActivity.checked) {
+            if (selectedName !== activityName && selectedActivity.checked && selectedTime === activityTime) {
                 // Disable activity if it's in the same time slot
-                if (selectedTime === activityTime) {
-                    activity.parentNode.className = 'disabled';
-                    activity.disabled = true;
-                } 
+                activity.parentNode.className = 'disabled';
+                activity.disabled = true;
             // If unchecked
-            } else if (!selectedActivity.checked) {
+            } else if (!selectedActivity.checked && selectedTime === activityTime) {
                 // Enable activity that was in the same time slot
-                if (selectedTime === activityTime) {
-                    activity.parentNode.className = '';
-                    activity.disabled = false;
-                } 
+                activity.parentNode.className = '';
+                activity.disabled = false;
             }
         });
+        // If checked or unchecked update totalCost with cost
+        selectedActivity.checked ? totalCost += cost : totalCost -= cost;
+        activityCostDisplay.textContent = `Total: $${totalCost}`;
     });
 
     // -----------------
@@ -169,11 +132,83 @@ function onPageLoad() {
         updatePaymentMethod();
     });
 
+    // --------------------------
+    // Tooltip for missing fields
+    function showOrHideToolTip(show, element) {
+        if (show) {
+            element.style.display = 'inherit';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+
+    // --------------------------
+    // Validate field when typing
+    function checkInput(validator) {
+        return e => {
+            const text = e.target.value;
+            const valid = validator(text);
+            const showTip = text !== '' && !valid;
+            const tooltip = e.target.nextElementSibling;
+            showOrHideToolTip(showTip, tooltip);
+        };
+    }
+
+    // -------------------------------
+    // Check if Field can be submitted
+    function checkSubmit (validate, element, e) {
+        if (validate){
+            // Submit Form
+            console.log('valid');
+            const tooltip = element.nextElementSibling;
+            showOrHideToolTip(false, tooltip);
+        } else {
+            // Prevent form submission and show tooltip
+            e.preventDefault();
+            //const text = element.value;
+            const tooltip = element.nextElementSibling;
+            showOrHideToolTip(true, tooltip);
+        }
+    }
+
+    // ----------------------
+    // Check Regex for Fields
+    const isValidName = name => /[^\s\d\W_][a-z A-Z]*$/.test(name);
+    const isValidEmail = email => /[^\s\W][a-zA-Z-_\d]+@[a-zA-Z\d]+\.\w{3}$/.test(email);
+    const isValidCC = cc => /^\d{13}\d?\d?\d?$/.test(cc);
+    const isValidZip = zip => /^\d{5}$/.test(zip);
+    const isValidCCV = ccv => /^\d{3}$/.test(ccv);
+
+    // -------------------------------
+    // Fields to validate while typing
+    nameInput.addEventListener('input', checkInput(isValidName));
+    emailInput.addEventListener('input', checkInput(isValidEmail));
+    ccInput.addEventListener('input', checkInput(isValidCC));
+    ccZip.addEventListener('input', checkInput(isValidZip));
+    ccCCV.addEventListener('input', checkInput(isValidCCV));
+
     // --------------
     // On Form Submit
     form.addEventListener('submit', e => {
-        e.preventDefault();
-        submitForm();
+        checkSubmit(isValidName(nameInput.value), nameInput, e);
+        checkSubmit(isValidEmail(emailInput.value), emailInput, e);
+        checkSubmit(tshirtDesign.selectedIndex, tshirtDesign, e);
+        // If credit card is selected
+        if (payment.selectedIndex === 1) {
+            checkSubmit(isValidCC(ccInput.value), ccInput, e);
+            checkSubmit(isValidZip(ccZip.value), ccZip, e);
+            checkSubmit(isValidZip(ccCCV.value), ccCCV, e);
+            checkSubmit(ccExpMonth.selectedIndex, ccExpMonth, e);
+            checkSubmit(ccExpYear.selectedIndex, ccExpYear, e);
+        }
+        // Check if an activity has been selected
+        let activityChecked = false;
+        activities.forEach(activity => {
+            if (activity.checked) {
+                activityChecked = true;
+            }
+        });
+        checkSubmit(activityChecked, activitiesBox.nextElementSibling, e);
     });
 
     initializeForm();
