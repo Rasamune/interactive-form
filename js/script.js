@@ -102,13 +102,7 @@ function onPageLoad() {
     // On Register Activities Change
     registerActivities.addEventListener('change', e => {
         // Check if an activity has been selected and update tooltip
-        let activityChecked = false;
-        activities.forEach(activity => {
-            if (activity.checked) {
-                activityChecked = true;
-            }
-        });
-        checkSubmit(activityChecked, activitiesBox.nextElementSibling, e);
+        checkSubmit(isActivityChecked(), activitiesBox.nextElementSibling, e);
         const activityCostDisplay = registerActivities.querySelector('#activities-cost');
         const selectedActivity = e.target;
         const cost = parseInt(selectedActivity.getAttribute('data-cost'));
@@ -190,6 +184,18 @@ function onPageLoad() {
         }
     }
 
+    // --------------------------------------
+    // Check if an Activity Has been selected
+    function isActivityChecked () {
+        let activityChecked = false;
+        activities.forEach(activity => {
+            if (activity.checked) {
+                activityChecked = true;
+            }
+        });
+        return activityChecked;
+    }
+
     // ----------------------------
     // Check Valid Regex for Fields
     const isValidName = name => /[^\s\d\W_][a-z A-Z]*$/.test(name);
@@ -220,14 +226,7 @@ function onPageLoad() {
             checkSubmit(ccExpMonth.selectedIndex, ccExpMonth, e);
             checkSubmit(ccExpYear.selectedIndex, ccExpYear, e);
         }
-        // Check if an activity has been selected
-        let activityChecked = false;
-        activities.forEach(activity => {
-            if (activity.checked) {
-                activityChecked = true;
-            }
-        });
-        checkSubmit(activityChecked, activitiesBox.nextElementSibling, e);
+        checkSubmit(isActivityChecked(), activitiesBox.nextElementSibling, e);
     });
 
     initializeForm();
