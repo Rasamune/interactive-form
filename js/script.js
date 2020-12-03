@@ -17,6 +17,9 @@ function onPageLoad() {
 
     const nameInput = document.querySelector('#name');
     const emailInput = document.querySelector('#email');
+    const ccInput = document.querySelector('#cc-num');
+    const ccZip = document.querySelector('#zip');
+    const ccCCV = document.querySelector('#cvv');
 
     // --------------------------
     // Set initial element values
@@ -60,15 +63,15 @@ function onPageLoad() {
     }
 
     // -----------------------------
-    // Submit Form & Validate Fields
-    function submitForm() {
+     // Submit Form & Validate Fields
+     function submitForm() {
         isValidName();
-    }
+     }
 
-    function showOrHideToolTip(show, element) {
-        if (show) {
+     function showOrHideToolTip(show, element) {
+         if (show) {
             element.style.display = 'inherit';
-        } else {
+         } else {
             element.style.display = 'none';
         }
     }
@@ -80,15 +83,21 @@ function onPageLoad() {
             const showTip = text !== '' && !valid;
             const tooltip = e.target.nextElementSibling;
             showOrHideToolTip(showTip, tooltip);
-        }
+        };
     }
 
     // Validate Name Field
     const isValidName = name => /[^\s\d\W_][a-z A-Z]*$/.test(name);
     const isValidEmail = email => /[^\s\W][a-zA-Z-_\d]+@[a-zA-Z\d]+\.\w{3}$/.test(email);
+    const isValidCC = cc => /^\d{13}\d?\d?\d?$/.test(cc);
+    const isValidZip = zip => /^\d{5}$/.test(zip);
+    const isValidCCV = ccv => /^\d{3}$/.test(ccv);
 
     nameInput.addEventListener('input', checkInput(isValidName));
     emailInput.addEventListener('input', checkInput(isValidEmail));
+    ccInput.addEventListener('input', checkInput(isValidCC));
+    ccZip.addEventListener('input', checkInput(isValidZip));
+    ccCCV.addEventListener('input', checkInput(isValidCCV));
 
     // ------------------
     // On Job Role Change (if 'other' selected)
