@@ -14,10 +14,10 @@ function onPageLoad() {
     const activities = registerActivities.querySelectorAll('[type="checkbox"]');
     const payment = document.querySelector('#payment');
     const form = document.querySelector('form');
-    let totalCost = 0;
-    // Credit Card Fields
     const nameInput = document.querySelector('#name');
     const emailInput = document.querySelector('#email');
+    let totalCost = 0;
+    // Credit Card Fields
     const ccInput = document.querySelector('#cc-num');
     const ccZip = document.querySelector('#zip');
     const ccCCV = document.querySelector('#cvv');
@@ -34,6 +34,13 @@ function onPageLoad() {
         payment.selectedIndex = 1; // Credit Card is default
         ccExpMonth.selectedIndex = 0;
         ccExpYear.selectedIndex = 0;
+
+        // Reset Fields to Blank
+        nameInput.value = '';
+        emailInput.value = '';
+        ccInput.value = '';
+        ccZip.value = '';
+        ccCCV.value = '';
 
         // Focus on the first text input
         document.querySelector('[name="user-name"]').focus();
@@ -149,8 +156,10 @@ function onPageLoad() {
     // Tooltip for missing fields
     function showOrHideToolTip(show, element) {
         if (show) {
+            element.previousElementSibling.classList.add('not-valid');
             element.style.display = 'inherit';
         } else {
+            element.previousElementSibling.classList.remove('not-valid');
             element.style.display = 'none';
         }
     }
@@ -173,12 +182,14 @@ function onPageLoad() {
         if (validate){
             // Submit Form
             console.log('valid');
+            element.classList.remove('not-valid');
             const tooltip = element.nextElementSibling;
             showOrHideToolTip(false, tooltip);
         } else {
             // Prevent form submission and show tooltip
             e.preventDefault();
             //const text = element.value;
+            element.classList.add('not-valid');
             const tooltip = element.nextElementSibling;
             showOrHideToolTip(true, tooltip);
         }
