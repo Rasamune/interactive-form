@@ -15,7 +15,7 @@ function onPageLoad() {
     const payment = document.querySelector('#payment');
     const form = document.querySelector('form');
     let totalCost = 0;
-
+    // Credit Card Fields
     const nameInput = document.querySelector('#name');
     const emailInput = document.querySelector('#email');
     const ccInput = document.querySelector('#cc-num');
@@ -78,6 +78,8 @@ function onPageLoad() {
     // ------------------------
     // On T-Shirt Design Change
     tshirtDesign.addEventListener('change', e => {
+        //Update Tooltip
+        checkSubmit(tshirtDesign.selectedIndex, tshirtDesign, e);
         const selectedDesignTheme = e.target.options[e.target.selectedIndex].value;
         // On design list change, reset tshirtColor drop down list
         tshirtColor.selectedIndex = 0;
@@ -99,6 +101,14 @@ function onPageLoad() {
     // -----------------------------
     // On Register Activities Change
     registerActivities.addEventListener('change', e => {
+        // Check if an activity has been selected and update tooltip
+        let activityChecked = false;
+        activities.forEach(activity => {
+            if (activity.checked) {
+                activityChecked = true;
+            }
+        });
+        checkSubmit(activityChecked, activitiesBox.nextElementSibling, e);
         const activityCostDisplay = registerActivities.querySelector('#activities-cost');
         const selectedActivity = e.target;
         const cost = parseInt(selectedActivity.getAttribute('data-cost'));
@@ -130,6 +140,15 @@ function onPageLoad() {
     payment.addEventListener('change', e => {
         const selectedPayMethod = e.target.value;
         updatePaymentMethod();
+    });
+
+    // ----------------------------
+    // Update CC Tooltips on Change
+    ccExpMonth.addEventListener('change', e => {
+        checkSubmit(ccExpMonth.selectedIndex, ccExpMonth, e);
+    });
+    ccExpYear.addEventListener('change', e => {
+        checkSubmit(ccExpYear.selectedIndex, ccExpYear, e);
     });
 
     // --------------------------
@@ -171,8 +190,8 @@ function onPageLoad() {
         }
     }
 
-    // ----------------------
-    // Check Regex for Fields
+    // ----------------------------
+    // Check Valid Regex for Fields
     const isValidName = name => /[^\s\d\W_][a-z A-Z]*$/.test(name);
     const isValidEmail = email => /[^\s\W][a-zA-Z-_\d]+@[a-zA-Z\d]+\.\w{3}$/.test(email);
     const isValidCC = cc => /^\d{13}\d?\d?\d?$/.test(cc);
@@ -197,7 +216,7 @@ function onPageLoad() {
         if (payment.selectedIndex === 1) {
             checkSubmit(isValidCC(ccInput.value), ccInput, e);
             checkSubmit(isValidZip(ccZip.value), ccZip, e);
-            checkSubmit(isValidZip(ccCCV.value), ccCCV, e);
+            checkSubmit(isValidCCV(ccCCV.value), ccCCV, e);
             checkSubmit(ccExpMonth.selectedIndex, ccExpMonth, e);
             checkSubmit(ccExpYear.selectedIndex, ccExpYear, e);
         }
