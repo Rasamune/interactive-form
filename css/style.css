@@ -108,6 +108,16 @@ select {
 	margin-bottom: 1.125em;	
 }
 
+input:focus,
+select:focus,
+option:focus {
+  border: 4px solid #6ed756 !important;
+}
+
+input[type="checkbox"]:focus {
+  outline: 6px solid #6ed756 !important;
+}
+
 input, 
 select, 
 option {

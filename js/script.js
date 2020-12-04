@@ -109,7 +109,7 @@ function onPageLoad() {
     // On Register Activities Change
     registerActivities.addEventListener('change', e => {
         // Check if an activity has been selected and update tooltip
-        checkSubmit(isActivityChecked(), activitiesBox.nextElementSibling, e);
+        checkSubmit(isActivityChecked(), activitiesBox, e);
         const activityCostDisplay = registerActivities.querySelector('#activities-cost');
         const selectedActivity = e.target;
         const cost = parseInt(selectedActivity.getAttribute('data-cost'));
@@ -188,6 +188,8 @@ function onPageLoad() {
         } else {
             // Prevent form submission and show tooltip
             e.preventDefault();
+            // Scroll to top of page
+            window.scrollTo(0,0);
             //const text = element.value;
             element.classList.add('not-valid');
             const tooltip = element.nextElementSibling;
@@ -237,7 +239,7 @@ function onPageLoad() {
             checkSubmit(ccExpMonth.selectedIndex, ccExpMonth, e);
             checkSubmit(ccExpYear.selectedIndex, ccExpYear, e);
         }
-        checkSubmit(isActivityChecked(), activitiesBox.nextElementSibling, e);
+        checkSubmit(isActivityChecked(), activitiesBox, e);
     });
 
     initializeForm();
