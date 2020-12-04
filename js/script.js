@@ -184,12 +184,10 @@ function onPageLoad() {
             const valid = validator(text);
             const showTip = text !== '' && !valid;
             const tooltip = e.target.nextElementSibling;
-            if (valid) {
-                console.log('valid');
-            } else if (!valid) {
+            if (!valid) {
                 const containsNum = containsNumbers(text);
                 const containsSpec = containsSpecial(text);
-                console.log(containsNum);
+                
                 if (containsNum && containsSpec) {
                     tooltip.innerHTML = `Name field cannot be blank, cannot contain numbers or any special characters<i class="fas fa-exclamation-circle"></i>`;
                 } else if (containsNum) {
@@ -208,15 +206,12 @@ function onPageLoad() {
     function checkSubmit (validate, element, e) {
         if (validate){
             // Submit Form
-            console.log('valid');
             element.classList.remove('not-valid');
             const tooltip = element.nextElementSibling;
             showOrHideToolTip(false, tooltip);
         } else {
             // Prevent form submission and show tooltip
             e.preventDefault();
-            // Scroll to top of page
-            window.scrollTo(0,0);
             //const text = element.value;
             element.classList.add('not-valid');
             const tooltip = element.nextElementSibling;
@@ -241,7 +236,7 @@ function onPageLoad() {
     const isValidName = name => /^[^\d\W_][a-zA-Z\s-]*$/.test(name);
     const containsNumbers = text => /\d+/.test(text);
     const containsSpecial = text => /[^a-zA-Z0-9\s]+/.test(text);
-    const isValidEmail = email => /[^\s\W][a-zA-Z-_\d]+@[a-zA-Z\d]+\.\w{3}$/.test(email);
+    const isValidEmail = email => /[^\s\W]?[a-zA-Z-_\d]+@[a-zA-Z\d]+\.\w{3}$/.test(email);
     const isValidCC = cc => /^\d{13}\d?\d?\d?$/.test(cc);
     const isValidZip = zip => /^\d{5}$/.test(zip);
     const isValidCCV = ccv => /^\d{3}$/.test(ccv);
@@ -269,8 +264,15 @@ function onPageLoad() {
             checkSubmit(ccExpYear.selectedIndex, ccExpYear, e);
         }
         checkSubmit(isActivityChecked(), activitiesBox, e);
+
+        // Scroll to first invalid field
+        const errorElements = document.querySelectorAll('.not-valid');
+        if (errorElements) {
+            errorElements[0].parentElement.scrollIntoView(true);
+        }
     });
 
+    
     initializeForm();
 }
 
