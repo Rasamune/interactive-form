@@ -176,6 +176,33 @@ function onPageLoad() {
         };
     }
 
+    // -------------------
+    // Validate Name Field
+    function checkNameInput(validator) {
+        return e => {
+            const text = e.target.value;
+            const valid = validator(text);
+            const showTip = text !== '' && !valid;
+            const tooltip = e.target.nextElementSibling;
+            if (valid) {
+                console.log('valid');
+            } else if (!valid) {
+                const containsNum = containsNumbers(text);
+                const containsSpec = containsSpecial(text);
+                console.log(containsNum);
+                if (containsNum && containsSpec) {
+                    tooltip.innerHTML = `Name field cannot be blank, cannot contain numbers or any special characters<i class="fas fa-exclamation-circle"></i>`;
+                } else if (containsNum) {
+                    tooltip.innerHTML = `Name field cannot contain numbers<i class="fas fa-exclamation-circle"></i>`;
+                } else if (containsSpec) {
+                    tooltip.innerHTML = `Name field cannot contain special characters<i class="fas fa-exclamation-circle"></i>`;
+                }
+            }
+
+            showOrHideToolTip(showTip, tooltip);
+        };
+    }
+
     // -------------------------------
     // Check if Field can be submitted
     function checkSubmit (validate, element, e) {
@@ -211,7 +238,9 @@ function onPageLoad() {
 
     // ----------------------------
     // Check Valid Regex for Fields
-    const isValidName = name => /[^\s\d\W_][a-z A-Z]*$/.test(name);
+    const isValidName = name => /^[^\d\W_][a-zA-Z\s-]*$/.test(name);
+    const containsNumbers = text => /\d+/.test(text);
+    const containsSpecial = text => /[^a-zA-Z0-9\s]+/.test(text);
     const isValidEmail = email => /[^\s\W][a-zA-Z-_\d]+@[a-zA-Z\d]+\.\w{3}$/.test(email);
     const isValidCC = cc => /^\d{13}\d?\d?\d?$/.test(cc);
     const isValidZip = zip => /^\d{5}$/.test(zip);
@@ -219,7 +248,7 @@ function onPageLoad() {
 
     // -------------------------------
     // Fields to validate while typing
-    nameInput.addEventListener('input', checkInput(isValidName));
+    nameInput.addEventListener('input', checkNameInput(isValidName));
     emailInput.addEventListener('input', checkInput(isValidEmail));
     ccInput.addEventListener('input', checkInput(isValidCC));
     ccZip.addEventListener('input', checkInput(isValidZip));
