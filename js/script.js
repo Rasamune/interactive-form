@@ -139,7 +139,6 @@ function onPageLoad() {
     // -----------------
     // On Payment Change
     payment.addEventListener('change', e => {
-        const selectedPayMethod = e.target.value;
         updatePaymentMethod();
     });
 
@@ -185,9 +184,9 @@ function onPageLoad() {
             const showTip = text !== '' && !valid;
             const tooltip = e.target.nextElementSibling;
             if (!valid) {
+                // Check if name contains Numbers, Special Characters or Both
                 const containsNum = containsNumbers(text);
                 const containsSpec = containsSpecial(text);
-                
                 if (containsNum && containsSpec) {
                     tooltip.innerHTML = `Name field cannot be blank, cannot contain numbers or any special characters<i class="fas fa-exclamation-circle"></i>`;
                 } else if (containsNum) {
@@ -255,7 +254,7 @@ function onPageLoad() {
         checkSubmit(isValidName(nameInput.value), nameInput, e);
         checkSubmit(isValidEmail(emailInput.value), emailInput, e);
         checkSubmit(tshirtDesign.selectedIndex, tshirtDesign, e);
-        // If credit card is selected
+        // If credit card payment is selected
         if (payment.selectedIndex === 1) {
             checkSubmit(isValidCC(ccInput.value), ccInput, e);
             checkSubmit(isValidZip(ccZip.value), ccZip, e);
