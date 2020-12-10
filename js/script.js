@@ -235,7 +235,7 @@ function onPageLoad() {
     const isValidName = name => /^[^\d\W_][a-zA-Z\s-]*$/.test(name);
     const containsNumbers = text => /\d+/.test(text);
     const containsSpecial = text => /[^a-zA-Z0-9\s]+/.test(text);
-    const isValidEmail = email => /[^\s\W]?[a-zA-Z-_\d]+@[a-zA-Z\d]+\.\w{3}$/.test(email);
+    const isValidEmail = email => /[^\s\W]?[a-zA-Z-_\d]+@[a-zA-Z\d]+\.\w+$/.test(email);
     const isValidCC = cc => /^\d{13}\d?\d?\d?$/.test(cc);
     const isValidZip = zip => /^\d{5}$/.test(zip);
     const isValidCCV = ccv => /^\d{3}$/.test(ccv);
